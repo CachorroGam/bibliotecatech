@@ -62,7 +62,7 @@ def register(request):
         
         return redirect('/login')  # Redirigir a la página de login después de registrarse
     
-    return render(request, '/register')
+    return render(request, 'register')
 
 
 
