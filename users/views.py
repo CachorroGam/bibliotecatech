@@ -60,9 +60,9 @@ def register(request):
         group = Group.objects.get(name='usuario')
         user.groups.add(group)
         
-        return redirect('/login')  # Redirigir a la página de login después de registrarse
+        return redirect('login')  # Redirigir a la página de login después de registrarse
     
-    return render(request, 'register')
+    return render(request, 'register.html')
 
 
 
