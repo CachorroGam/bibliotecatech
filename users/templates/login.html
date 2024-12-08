@@ -35,7 +35,7 @@
             margin-bottom: 5px;
             font-weight: bold;
         }
-        .input-group input {
+        .input-group input, .input-group select {
             width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
@@ -76,7 +76,12 @@
             {% csrf_token %}
             <div class="input-group">
                 <label for="username">Usuario:</label>
-                <input type="text" id="username" name="username" required>
+                <select id="username" name="username" required>
+                    <option value="">Seleccionar usuario temporalmente</option>
+                    <option value="usuario1">Usuario 1</option>
+                    <option value="usuario2">Usuario 2</option>
+                    <option value="usuario3">Usuario 3</option>
+                </select>
             </div>
             <div class="input-group">
                 <label for="password">Contraseña:</label>
