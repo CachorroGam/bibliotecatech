@@ -84,18 +84,3 @@ class Migration(migrations.Migration):
 
 
 
-from django.db import migrations
-
-def create_superuser(apps, schema_editor):
-    User = apps.get_model('auth', 'User')
-    User.objects.create_superuser('franklin', 'franklinpop03azul@gmail.com', '12345')
-
-class Migration(migrations.Migration):
-
-    dependencies = [
-        # Define tus dependencias aquí
-    ]
-
-    operations = [
-        migrations.RunPython(create_superuser),
-    ]
