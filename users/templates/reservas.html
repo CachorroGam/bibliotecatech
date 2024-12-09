@@ -11,16 +11,32 @@
                     <th>Nombre del Usuario</th>
                     <th>Número de Membresía</th>
                     <th>Título del Libro</th>
-                    <th>Acciones</th> 
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 {% for libro in reservas %}
                     <tr>
-                        <td>{{ libro.reservado_por.get_full_name }}</td>
-                        <td>{{ libro.reservado_por.profile.numero_membresia }}</td>
-                        <td>{{ libro.titulo }}</td>
+                        <td>
+                            {% if libro.reservado_por %}
+                                {% if libro.reservado_por.get_full_name %}
+                                    {{ libro.reservado_por.get_full_name }}
+                                {% else %}
+                                    {{ libro.reservado_por.username }}
+                                {% endif %}
+                            {% else %}
+                                Usuario no especificado
+                            {% endif %}
+                        </td>
                         
+                        <td>
+                            {% if libro.reservado_por and libro.reservado_por.profile %}
+                                {{ libro.reservado_por.profile.numero_membresia }}
+                            {% else %}
+                                Sin membresía
+                            {% endif %}
+                        </td>
+                        <td>{{ libro.titulo }}</td>
                         <td>
                             <a href="{% url 'eliminar_reserva' libro.id %}" class="btn-delete" onclick="return confirm('¿Está seguro de eliminar esta reserva?');">Eliminar</a>
                             <a href="{% url 'registrar_prestamo' libro.id %}" class="btn-prestamo">Préstamo</a>

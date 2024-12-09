@@ -154,7 +154,7 @@ def settings_view(request):
         new_password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
         notifications = request.POST.get('notifications') == 'on'
-        profile_picture = request.FILES.get('profile_picture') 
+        profile_picture = request.FILES.get('profile_pictures') 
 
         request.user.username = username
         request.user.email = email
@@ -405,17 +405,25 @@ def eliminar_libro(request, id):
 
     return redirect('dash_admin')  
 
-
+from django.shortcuts import render
+from django.contrib.auth.models import User, Group
 
 def users(request):
-    all_users = User.objects.all()  
-    return render(request, 'users.html', {'all_users': all_users})
+    usuarios = User.objects.all().select_related('profile')  # Cargar perfiles relacionados
+    grupos = Group.objects.all()  # Obtener todos los grupos
+    grouped_usuarios = {grupo.name: usuarios.filter(groups__name=grupo.name) for grupo in grupos}
+    return render(request, 'users.html', {'grouped_usuarios': grouped_usuarios})
+
+
+
+# def users(request):
+#     all_users = User.objects.all()  
+#     return render(request, 'users.html', {'all_users': all_users})
 
 
 def users_empleado(request):
     all_users = User.objects.all() 
     return render(request, 'users_empleado.html', {'all_users': all_users})
-
 
 
 
@@ -426,18 +434,25 @@ def eliminar_usuario(request, user_id):
     return redirect('users')  
 
 
+from django.contrib import messages
+from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib.auth.models import User
+from .forms import UserForm
+from django.db import transaction  # Para manejar transacciones en la base de datos
+
 def editar_usuario(request, id):
     user = get_object_or_404(User, id=id)
-    
-    tiene_administrador = user.groups.filter(name="Administrador").exists()
-    tiene_empleado = user.groups.filter(name="Empleado").exists()
-    tiene_usuario = user.groups.filter(name="Usuario").exists()
+
+    tiene_admin = user.groups.filter(name="admin").exists()
+    tiene_empleado = user.groups.filter(name="empleado").exists()
+    tiene_jefe = user.groups.filter(name="jefe").exists()
+    tiene_usuario = user.groups.filter(name="usuario").exists()
     
     if request.method == 'POST':
         form = UserForm(request.POST, instance=user)
-        
+        role = request.POST.get('role')  # Obtener el valor del rol del formulario
         password_form = PasswordChangeForm(user, request.POST)
-        
+
         new_role = request.POST.get('role')  
         
         if password_form.is_valid():
@@ -451,11 +466,7 @@ def editar_usuario(request, id):
             user.groups.add(group)  
             
             messages.success(request, f"Rol cambiado a {new_role}")
-
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Usuario actualizado correctamente")
-            return redirect('users')  
+        
     else:
         form = UserForm(instance=user)
         password_form = PasswordChangeForm(user)
@@ -464,19 +475,26 @@ def editar_usuario(request, id):
         'form': form,
         'password_form': password_form,
         'user': user,
-        'tiene_administrador': tiene_administrador,
+        'tiene_admin': tiene_admin,
         'tiene_empleado': tiene_empleado,
+        'tiene_jefe': tiene_jefe,
         'tiene_usuario': tiene_usuario,
     })
 
 
+
+
+from django.contrib import messages
+from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import PasswordChangeForm
+from .forms import UserForm
 
 def editar_usuario_empleado(request, id):
     user = get_object_or_404(User, id=id)
     
     if request.method == 'POST':
         form = UserForm(request.POST, instance=user)
-        
         password_form = PasswordChangeForm(user, request.POST)
         
         if password_form.is_valid():

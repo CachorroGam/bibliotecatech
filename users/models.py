@@ -13,7 +13,7 @@ from PIL import Image
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    avatar = models.ImageField(default='default.jpg', upload_to='profile_images')
+    avatar = models.ImageField(default='default.jpg', upload_to='profile_pictures')
     bio = models.TextField()
     numero_membresia = models.BigIntegerField(unique=True, null=True, blank=True)  
     fecha_registro = models.DateTimeField(default=timezone.now)
@@ -22,6 +22,7 @@ class Profile(models.Model):
         ('activo', 'Activo'),
         ('inactivo', 'Inactivo'),
     ]
+    
     
     estado_membresia = models.CharField(
         max_length=8, 
