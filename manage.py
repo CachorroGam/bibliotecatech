@@ -28,7 +28,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 # Configura tus datos de superusuario aquí
-SUPERUSER_USERNAME = "frank"
+SUPERUSER_USERNAME = "franklin"
 SUPERUSER_EMAIL = "franklinpop03azul@gmail.com"
 SUPERUSER_PASSWORD = "fisn853nmf"
 
