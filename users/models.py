@@ -6,6 +6,11 @@ from django.utils import timezone
 
 
 
+from django.db import models
+from django.contrib.auth.models import User
+from django.utils import timezone
+from PIL import Image
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     avatar = models.ImageField(default='default.jpg', upload_to='profile_images')
@@ -24,18 +29,24 @@ class Profile(models.Model):
         default='activo'
     )  
     
-    
     def __str__(self):
         return self.user.username
 
     def save(self, *args, **kwargs):
+        # Asignar automáticamente el número de membresía si no existe
+        if self.numero_membresia is None:
+            last_profile = Profile.objects.order_by('-numero_membresia').first()
+            self.numero_membresia = last_profile.numero_membresia + 1 if last_profile and last_profile.numero_membresia else 1
+
         super().save(*args, **kwargs)
 
+        # Redimensionar la imagen del avatar si es demasiado grande
         img = Image.open(self.avatar.path)
         if img.height > 100 or img.width > 100:
             new_img = (100, 100)
             img.thumbnail(new_img)
             img.save(self.avatar.path)
+
 
 
 

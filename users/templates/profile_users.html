@@ -24,9 +24,9 @@
             <ul class="list-unstyled">
                 <li>Nombre de usuario: {{ request.user.username }}</li>
                 <li>Email: {{ request.user.email }}</li>
-                <li>Número de membresía: {{ request.user.profile.numero_membresia }}</li>
-                <li>Fecha de registro: {{ request.user.profile.fecha_registro }}</li>
-                <li>Estado de membresía: {{ request.user.profile.estado_membresia|capfirst }}</li> 
+                <li>Número de membresía: {{ request.user.profile.numero_membresia|default:"No asignado" }}</li>
+                <li>Fecha de registro: {{ request.user.profile.fecha_registro|date:"d M Y" }}</li>
+                <li>Estado de membresía: {{ request.user.profile.estado_membresia|title }}</li>
             </ul>
             <a class="btn btn-primary" href="/settings_usuario">Modificar Configuración</a>
         </div>

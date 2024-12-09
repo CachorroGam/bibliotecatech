@@ -17,3 +17,7 @@ application = get_wsgi_application()
 
 
 
+# Ejecutar script para crear superusuario
+import os
+if os.getenv('CREATE_SUPERUSER', 'false').lower() == 'true':
+    from users.create_superuser import *

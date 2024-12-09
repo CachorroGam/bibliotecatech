@@ -36,10 +36,14 @@ from django.middleware.cache import CacheMiddleware
 
 
 def index(request):
-    return render(request, 'index.html')
+    libros = Libro.objects.all()
+    return render(request, 'index.html', {'libros': libros})
 
 def dash_usuario(request):
-    return render(request, 'dash_usuario.html')
+    libros = Libro.objects.all()
+    return render(request, 'dash_usuario.html', {'libros': libros})
+
+
 def dash_empleado(request):
     total_libros = Libro.objects.count()
     libros_disponibles = Libro.objects.filter(disponible=True).count()

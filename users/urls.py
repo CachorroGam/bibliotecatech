@@ -1,8 +1,9 @@
 from django.urls import path
 from . import views
-from .views import profile_view, settings_view, delete_account, logout_view, settings_usuario_view, profile_users_view, contacto_users, devolver_libro_view, profile_empleado_view, settings_empleado_view
+from .views import profile_view, settings_view, delete_account, logout_view, settings_usuario_view, contacto_users, devolver_libro_view, profile_empleado_view, settings_empleado_view
 from django.conf import settings
 from django.conf.urls.static import static
+from .views import profile_users_view
 
 from users.forms import LoginForm
 
@@ -23,7 +24,6 @@ urlpatterns = [
     path('profile/', profile_view, name='profile'),
     path('profile_empleado/', profile_empleado_view, name='profile_empleado'),
     path('settings_usuario/', settings_usuario_view, name='settings_usuario'),
-    path('profile_users/', profile_users_view, name='profile_users'),
     path('delete_account/', delete_account, name='delete_account'), 
     path('libros/', views.listar_libros, name='libros'),
     path('libros_empleado/', views.listar_libros_empleado, name='libros_empleado'),
@@ -55,8 +55,8 @@ urlpatterns = [
     path('devolucion/<int:prestamo_id>/', views.devolucion_prestamo_view, name='devolucion_prestamo'),
     path('historial_prestamos/', views.historial_prestamos, name='historial_prestamos'),
     path('historial_prestamos_empleado/', views.historial_prestamos_empleado, name='historial_prestamos_empleado'),
-    path('mis-prestamos/', views.mis_prestamos, name='mis_prestamos'),
-    
+    path('mis_prestamos/', views.mis_prestamos, name='mis_prestamos'),
+    path('profile_users/', profile_users_view, name='profile_users'),
 
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
