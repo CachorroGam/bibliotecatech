@@ -744,7 +744,7 @@ def cancelar_reserva(request, libro_id):
 
 
 
-@login_required
+
 def reservas_view(request):
     reservas = Libro.objects.filter(reservado=True) 
     context = {
@@ -752,7 +752,7 @@ def reservas_view(request):
     }
     return render(request, 'reservas.html', context)
 
-@login_required
+
 def reservas_empleado_view(request):
     reservas = Libro.objects.filter(reservado=True) 
     context = {
@@ -760,7 +760,7 @@ def reservas_empleado_view(request):
     }
     return render(request, 'reservas_empleado.html', context)
 
-@login_required
+
 def reservas_view_jefe(request):
     reservas = Libro.objects.filter(reservado=True) 
     context = {
