@@ -1,3 +1,7 @@
+{% extends "base_jefe.html" %}
+{% load static %}
+{% block content %}
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -74,6 +78,7 @@
             {% endfor %}
         </tbody>
     </table>
-    <a href="{% url 'dash_admin' %}">Volver al inicio</a>
+    <a href="{% url 'dash_jefe' %}">Volver al inicio</a>
 </body>
 </html>
+{% endblock %}

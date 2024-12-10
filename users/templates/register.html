@@ -45,7 +45,7 @@
         .input-group .toggle-password {
             position: absolute;
             right: 10px;
-            top: 28px;
+            top: 35px;
             cursor: pointer;
             font-size: 18px;
             color: #888;
@@ -70,12 +70,29 @@
             margin-top: 10px;
             text-align: center;
         }
+        .error-message, .validation-message {
+            color: red;
+            background-color: #ffe6e6;
+            border: 1px solid #ff0000;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .success-message {
+            color: green;
+        }
     </style>
 </head>
 <body>
     <div class="register-container">
         <h2>Registrarse</h2>
-        <form method="post">
+        {% if error_message %}
+            <div class="error-message">
+                {{ error_message }}
+            </div>
+        {% endif %}
+        <form method="post" id="register-form">
             {% csrf_token %}
             <div class="input-group">
                 <label for="username">Usuario:</label>
@@ -85,15 +102,17 @@
                 <label for="email">Correo electrónico:</label>
                 <input type="email" id="email" name="email" required>
             </div>
-            <div class="input-group password">
+            <div class="input-group">
                 <label for="password">Contraseña:</label>
-                <input type="password" id="password" name="password" required>
+                <input type="password" id="password" name="password" required oninput="validatePassword()">
                 <i class="bi bi-eye-slash toggle-password" onclick="togglePasswordVisibility('password')"></i>
+                <small id="password-hint" class="validation-message"></small>
             </div>
-            <div class="input-group confirm-password">
+            <div class="input-group">
                 <label for="password_confirm">Confirmar contraseña:</label>
-                <input type="password" id="password_confirm" name="password_confirm" required>
+                <input type="password" id="password_confirm" name="password_confirm" required oninput="checkPasswordsMatch()">
                 <i class="bi bi-eye-slash toggle-password" onclick="togglePasswordVisibility('password_confirm')"></i>
+                <small id="password-match" class="validation-message"></small>
             </div>
             <button type="submit">Registrarse</button>
         </form>
@@ -104,8 +123,8 @@
 
     <script>
         function togglePasswordVisibility(id) {
-            var input = document.getElementById(id);
-            var icon = input.nextElementSibling;
+            const input = document.getElementById(id);
+            const icon = input.nextElementSibling;
 
             if (input.type === 'password') {
                 input.type = 'text';
@@ -115,6 +134,35 @@
                 input.type = 'password';
                 icon.classList.remove('bi-eye');
                 icon.classList.add('bi-eye-slash');
+            }
+        }
+
+        function validatePassword() {
+            const password = document.getElementById('password').value;
+            const hint = document.getElementById('password-hint');
+            if (password.length >= 8) {
+                hint.textContent = "La contraseña es válida.";
+                hint.classList.add('success-message');
+                hint.classList.remove('validation-message');
+            } else {
+                hint.textContent = "La contraseña debe tener al menos 8 caracteres.";
+                hint.classList.add('validation-message');
+                hint.classList.remove('success-message');
+            }
+        }
+
+        function checkPasswordsMatch() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('password_confirm').value;
+            const matchHint = document.getElementById('password-match');
+            if (confirmPassword === password) {
+                matchHint.textContent = "Las contraseñas coinciden.";
+                matchHint.classList.add('success-message');
+                matchHint.classList.remove('validation-message');
+            } else {
+                matchHint.textContent = "Las contraseñas no coinciden.";
+                matchHint.classList.add('validation-message');
+                matchHint.classList.remove('success-message');
             }
         }
     </script>

@@ -12,13 +12,6 @@
 
     <section class="py-5">
         <div class="container text-center">
-            <div class="mb-4">
-                {% if request.user.userprofile.profile_picture %}
-                    <img src="{{ request.user.userprofile.profile_pictures.url }}" alt="Profile Picture" class="rounded-circle" style="width: 150px; height: 150px;">
-                {% else %}
-                    <img src="{% static 'default-profile.png' %}" alt="Foto de Perfil" class="rounded-circle" style="width: 150px; height: 150px;">
-                {% endif %}
-            </div>
 
             <h3>Información Personal</h3>
             <ul class="list-unstyled">

@@ -39,11 +39,27 @@ def index(request):
     libros = Libro.objects.all()
     return render(request, 'index.html', {'libros': libros})
 
+
+@login_required
+def termns(request):
+    return render(request, 'termns.html')
+@login_required
+def termns_empleado(request):
+    return render(request, 'termns_empleado.html')
+@login_required
+def politica_priv(request):
+    return render(request, 'politica_priv.html')
+@login_required
+def politica_priv_empleado(request):
+    return render(request, 'politica_priv_empleado.html')
+
+
+@login_required
 def dash_usuario(request):
     libros = Libro.objects.all()
     return render(request, 'dash_usuario.html', {'libros': libros})
 
-
+@login_required
 def dash_empleado(request):
     total_libros = Libro.objects.count()
     libros_disponibles = Libro.objects.filter(disponible=True).count()
@@ -64,18 +80,51 @@ def dash_empleado(request):
 
     return render(request, 'dash_empleado.html', context)
 
+@login_required
 def dash_jefe(request):
-    return render(request, 'dash_jefe.html')
+    total_libros = Libro.objects.count()
+    libros_disponibles = Libro.objects.filter(disponible=True).count()
+    total_prestamos = Prestamo.objects.count()
+    prestamos_activos = Prestamo.objects.filter(estado='prestado').count()
 
+    libros_mas_prestados = Prestamo.objects.values('libro__titulo') \
+        .annotate(total=Count('libro')) \
+        .order_by('-total')[:5]
+
+    context = {
+        'total_libros': total_libros,
+        'libros_disponibles': libros_disponibles,
+        'total_prestamos': total_prestamos,
+        'prestamos_activos': prestamos_activos,
+        'libros_mas_prestados': libros_mas_prestados
+    }
+    return render(request, 'dash_jefe.html', context)
+
+@login_required
 def dash_admin(request):
-    return render(request, 'dash_admin.html')
+    total_libros = Libro.objects.count()
+    libros_disponibles = Libro.objects.filter(disponible=True).count()
+    total_prestamos = Prestamo.objects.count()
+    prestamos_activos = Prestamo.objects.filter(estado='prestado').count()
+
+    libros_mas_prestados = Prestamo.objects.values('libro__titulo') \
+        .annotate(total=Count('libro')) \
+        .order_by('-total')[:5]
+
+    context = {
+        'total_libros': total_libros,
+        'libros_disponibles': libros_disponibles,
+        'total_prestamos': total_prestamos,
+        'prestamos_activos': prestamos_activos,
+        'libros_mas_prestados': libros_mas_prestados
+    }
+    return render(request, 'dash_admin.html', context)
 
 
 
 
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import Group
 
 def login_view(request):
     if request.method == 'POST':
@@ -84,20 +133,23 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            # Verificar el grupo al que pertenece el usuario
             if user.groups.filter(name='admin').exists():
-                return redirect('dash_admin')  # Redirigir a la página de admin
+                return redirect('dash_admin')
             elif user.groups.filter(name='jefe').exists():
-                return redirect('dash_jefe')  # Redirigir a la página de jefe
+                return redirect('dash_jefe')  
             elif user.groups.filter(name='empleado').exists():
-                return redirect('dash_empleado')  # Redirigir a la página de empleado
+                return redirect('dash_empleado') 
             else:
-                return redirect('dash_usuario')  # Redirigir a la página de usuario común
+                return redirect('dash_usuario') 
         else:
-            # Mostrar mensaje de error si el usuario no es autenticado
-            return render(request, 'login.html', {'error': 'Usuario o contraseña incorrectos'})
+            if not username or not password:
+                error_message = 'Por favor ingrese un nombre de usuario y una contraseña válidos.'
+            else:
+                error_message = 'Usuario o contraseña incorrectos.'
+            return render(request, 'login.html', {'error': error_message})
     else:
         return render(request, 'login.html')
+
 
 
 
@@ -107,19 +159,26 @@ from django.contrib.auth.models import User, Group
 from django.shortcuts import render, redirect
 
 def register(request):
+    error_message = None
     if request.method == 'POST':
         username = request.POST['username']
+        email = request.POST['email']
         password = request.POST['password']
-        
-        user = User.objects.create_user(username=username, password=password)
-        
-        # Asigna el grupo 'usuario' directamente al registrar
-        group = Group.objects.get(name='usuario')
-        user.groups.add(group)
-        
-        return redirect('login')  # Redirigir a la página de login después de registrarse
-    
-    return render(request, 'register.html')
+        password_confirm = request.POST['password_confirm']
+
+        if password != password_confirm:
+            error_message = "Las contraseñas no coinciden. Por favor, verifica."
+        else:
+            if User.objects.filter(username=username).exists():
+                error_message = "El nombre de usuario ya existe. Por favor, elige otro."
+            else:
+                user = User.objects.create_user(username=username, email=email, password=password)
+                group = Group.objects.get(name='usuario')  
+                user.groups.add(group)
+                return redirect('login') 
+
+    return render(request, 'register.html', {'error_message': error_message})
+
 
 
 
@@ -127,7 +186,7 @@ def contacto(request):
     return render(request, 'contacto.html')
 
 
-
+@login_required
 def contacto_users(request):
 
     context = {}
@@ -144,7 +203,7 @@ def logout_view(request):
     logout(request) 
     return redirect('login') 
 
-
+@login_required
 def settings_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -179,7 +238,7 @@ def settings_view(request):
     return render(request, 'settings.html')
 
 
-
+@login_required
 def settings_view_jefe(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -213,7 +272,7 @@ def settings_view_jefe(request):
 
     return render(request, 'settings_jefe.html')
 
-
+@login_required
 def settings_empleado_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -248,7 +307,7 @@ def settings_empleado_view(request):
     return render(request, 'settings_empleado.html')
 
 
-
+@login_required
 def profile_view(request):
     user_profile, created = UserProfile.objects.get_or_create(user=request.user)
     
@@ -258,7 +317,7 @@ def profile_view(request):
     response['Expires'] = '0'
     return response
 
-
+@login_required
 def profile_view_jefe(request):
     user_profile, created = UserProfile.objects.get_or_create(user=request.user)
     
@@ -268,7 +327,7 @@ def profile_view_jefe(request):
     response['Expires'] = '0'
     return response
 
-
+@login_required
 def profile_empleado_view(request):
     user_profile, created = UserProfile.objects.get_or_create(user=request.user)
 
@@ -278,6 +337,7 @@ def profile_empleado_view(request):
     response['Expires'] = '0'
     return response
 
+@login_required
 def settings_usuario_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -317,7 +377,7 @@ def settings_usuario_view(request):
     return render(request, 'settings_usuario.html')
 
 
-
+@login_required
 def delete_account(request):
     if request.method == 'POST':
         request.user.delete()
@@ -329,7 +389,7 @@ def delete_account(request):
 
 
 
-
+@login_required
 def listar_libros(request):
     libros = Libro.objects.all() 
 
@@ -343,7 +403,7 @@ def listar_libros(request):
 
 
 
-
+@login_required
 def listar_libros_jefe(request):
     libros = Libro.objects.all() 
 
@@ -368,7 +428,7 @@ def listar_libros_empleado(request):
 
     return response
 
-
+@login_required
 def listar_libros_users(request):
     libros = Libro.objects.all() 
 
@@ -393,7 +453,7 @@ def listar_libro(request):
 
     # return response
 
-
+@login_required
 def detalles_libro(request, id):
     libro = get_object_or_404(Libro, id=id)
     
@@ -405,7 +465,7 @@ def detalles_libro_pre(request, id):
     return render(request, 'detalles_libro_pre.html', {'libro': libro})
 
 
-
+@login_required
 def mis_prestamos(request):
     prestamos = Prestamo.objects.filter(usuario=request.user).select_related('libro')
     return render(request, 'mis_prestamos.html', {'prestamos': prestamos})
@@ -413,7 +473,7 @@ def mis_prestamos(request):
 
 
 
-
+@login_required
 def registrar_libro(request):
     if request.method == 'POST':
         form = LibroForm(request.POST, request.FILES) 
@@ -426,7 +486,7 @@ def registrar_libro(request):
     return render(request, 'register_libro.html', {'form': form})
 
 
-
+@login_required
 def registrar_libro_jefe(request):
     if request.method == 'POST':
         form = LibroForm(request.POST, request.FILES) 
@@ -438,6 +498,7 @@ def registrar_libro_jefe(request):
     
     return render(request, 'register_libro_jefe.html', {'form': form})
 
+@login_required
 def registrar_libro_empleado(request):
     if request.method == 'POST':
         form = LibroForm(request.POST, request.FILES)
@@ -451,7 +512,7 @@ def registrar_libro_empleado(request):
 
 
 
-
+@login_required
 def editar_libro(request, id):
     libro = get_object_or_404(Libro, id=id)
 
@@ -465,6 +526,7 @@ def editar_libro(request, id):
 
     return render(request, 'editar_libro.html', {'form': form, 'libro': libro})
 
+@login_required
 def editar_libro_jefe(request, id):
     libro = get_object_or_404(Libro, id=id)
 
@@ -478,7 +540,7 @@ def editar_libro_jefe(request, id):
 
     return render(request, 'editar_libro_jefe.html', {'form': form, 'libro': libro})
 
-
+@login_required
 def eliminar_libro(request, id):
     libro = get_object_or_404(Libro, id=id)
 
@@ -490,14 +552,14 @@ def eliminar_libro(request, id):
 
 from django.shortcuts import render
 from django.contrib.auth.models import User, Group
-
+@login_required
 def users(request):
     usuarios = User.objects.all().select_related('profile')  # Cargar perfiles relacionados
     grupos = Group.objects.all()  # Obtener todos los grupos
     grouped_usuarios = {grupo.name: usuarios.filter(groups__name=grupo.name) for grupo in grupos}
     return render(request, 'users.html', {'grouped_usuarios': grouped_usuarios})
 
-
+@login_required
 def users_jefe(request):
     usuarios = User.objects.all().select_related('profile').exclude(groups__name='admin')  # Excluir administradores y cargar perfiles relacionados
     grupos = Group.objects.all()  # Obtener todos los grupos
@@ -512,8 +574,7 @@ def users_jefe(request):
 
 
 
-
-
+@login_required
 def eliminar_usuario(request, user_id):
     user = get_object_or_404(User, id=user_id)
     user.delete()
@@ -525,7 +586,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.models import User
 from .forms import UserForm
 from django.db import transaction  # Para manejar transacciones en la base de datos
-
+@login_required
 def editar_usuario(request, id):
     user = get_object_or_404(User, id=id)
 
@@ -567,7 +628,7 @@ def editar_usuario(request, id):
         'tiene_usuario': tiene_usuario,
     })
 
-
+@login_required
 def editar_usuario_jefe(request, id):
     user = get_object_or_404(User, id=id)
 
@@ -615,7 +676,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
 from .forms import UserForm
-
+@login_required
 def editar_usuario_empleado(request, id):
     user = get_object_or_404(User, id=id)
     
@@ -683,7 +744,7 @@ def cancelar_reserva(request, libro_id):
 
 
 
-
+@login_required
 def reservas_view(request):
     reservas = Libro.objects.filter(reservado=True) 
     context = {
@@ -691,17 +752,25 @@ def reservas_view(request):
     }
     return render(request, 'reservas.html', context)
 
+@login_required
+def reservas_empleado_view(request):
+    reservas = Libro.objects.filter(reservado=True) 
+    context = {
+        'reservas': reservas
+    }
+    return render(request, 'reservas_empleado.html', context)
 
+@login_required
 def reservas_view_jefe(request):
     reservas = Libro.objects.filter(reservado=True) 
     context = {
-        'reservas_jefe': reservas
+        'reservas': reservas
     }
     return render(request, 'reservas_jefe.html', context)
 
 
 
-
+@login_required
 def eliminar_reserva(request, id):
     libro = get_object_or_404(Libro, id=id)
 
@@ -717,13 +786,42 @@ def eliminar_reserva(request, id):
     return redirect('reservas')
 
 
+@login_required
+def eliminar_reserva_empleado(request, id):
+    libro = get_object_or_404(Libro, id=id)
+
+    if libro.reservado:
+        libro.reservado = False 
+        libro.reservado_por = None  
+        libro.save()  
+
+        messages.success(request, f'La reserva del libro "{libro.titulo}" ha sido eliminada exitosamente.')
+    else:
+        messages.error(request, 'Este libro no tiene una reserva activa.')
+
+    return redirect('reservas_empleado')
+
+@login_required
+def eliminar_reserva_jefe(request, id):
+    libro = get_object_or_404(Libro, id=id)
+
+    if libro.reservado:
+        libro.reservado = False 
+        libro.reservado_por = None  
+        libro.save()  
+
+        messages.success(request, f'La reserva del libro "{libro.titulo}" ha sido eliminada exitosamente.')
+    else:
+        messages.error(request, 'Este libro no tiene una reserva activa.')
+
+    return redirect('reservas_jefe')
 
 
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Prestamo, Libro
 from .forms import PrestamoForm
 from django.utils import timezone
-
+@login_required
 def realizar_prestamo(request, libro_id):
     libro = get_object_or_404(Libro, id=libro_id)
     
@@ -743,6 +841,27 @@ def realizar_prestamo(request, libro_id):
 
     return render(request, 'realizar_prestamo.html', {'form': form})
 
+@login_required
+def realizar_prestamo_empleado(request, libro_id):
+    libro = get_object_or_404(Libro, id=libro_id)
+    
+    if not libro.disponible:
+        # Si el libro ya no está disponible, redirigir a la página de reservas o alguna otra acción
+        return redirect('reservas_empleado')
+    
+    if request.method == 'POST':
+        form = PrestamoForm(request.POST, user=request.user)
+        if form.is_valid():
+            prestamo = form.save()
+            libro.disponible = False  # Marcar el libro como no disponible
+            libro.save()
+            return redirect('reservas_empleado')
+    else:
+        form = PrestamoForm(user=request.user)
+
+    return render(request, 'realizar_prestamo_empleado.html', {'form': form})
+
+@login_required
 def realizar_prestamo_jefe(request, libro_id):
     libro = get_object_or_404(Libro, id=libro_id)
     
@@ -767,7 +886,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 from django.utils import timezone  # Asegúrate de importar esto
 from .models import Prestamo
-
+@login_required
 def devolver_libro(request, libro_id):
     # Busca el préstamo relacionado con el libro
     prestamo = get_object_or_404(Prestamo, libro_id=libro_id, estado='prestado')  # Verifica que 'estado' sea el campo correcto en tu modelo
@@ -787,17 +906,55 @@ def devolver_libro(request, libro_id):
     # Redirige al usuario a su página de préstamos
     return redirect('reservas')  # Cambia esta ruta según tu aplicación
 
+@login_required
+def devolver_libro_empleado(request, libro_id):
+    # Busca el préstamo relacionado con el libro
+    prestamo = get_object_or_404(Prestamo, libro_id=libro_id, estado='prestado')  # Verifica que 'estado' sea el campo correcto en tu modelo
 
+    # Verifica si el libro no ha sido devuelto ya
+    if prestamo.estado != 'devuelto':
+        prestamo.estado = 'devuelto'  # Cambia el estado a 'devuelto'
+        prestamo.fecha_devolucion = timezone.now()  # Registra la fecha de devolución
+        prestamo.libro.disponible = True  # Marca el libro como disponible
+        prestamo.libro.save()  # Guarda los cambios en el libro
+        prestamo.save()  # Guarda los cambios en el préstamo
+
+        messages.success(request, "El libro ha sido devuelto exitosamente.")
+    else:
+        messages.warning(request, "El libro ya había sido devuelto anteriormente.")
+    
+    # Redirige al usuario a su página de préstamos
+    return redirect('reservas_empleado')  # Cambia esta ruta según tu aplicación
+
+@login_required
+def devolver_libro_jefe(request, libro_id):
+    # Busca el préstamo relacionado con el libro
+    prestamo = get_object_or_404(Prestamo, libro_id=libro_id, estado='prestado')  # Verifica que 'estado' sea el campo correcto en tu modelo
+
+    # Verifica si el libro no ha sido devuelto ya
+    if prestamo.estado != 'devuelto':
+        prestamo.estado = 'devuelto'  # Cambia el estado a 'devuelto'
+        prestamo.fecha_devolucion = timezone.now()  # Registra la fecha de devolución
+        prestamo.libro.disponible = True  # Marca el libro como disponible
+        prestamo.libro.save()  # Guarda los cambios en el libro
+        prestamo.save()  # Guarda los cambios en el préstamo
+
+        messages.success(request, "El libro ha sido devuelto exitosamente.")
+    else:
+        messages.warning(request, "El libro ya había sido devuelto anteriormente.")
+    
+    # Redirige al usuario a su página de préstamos
+    return redirect('reservas_jefe')  # Cambia esta ruta según tu aplicación
 
 
 
 from django.shortcuts import render
 from .models import HistorialPrestamo
-
+@login_required
 def historial_prestamos(request):
     historial = HistorialPrestamo.objects.all().order_by('-fecha')  # Ordenar por fecha descendente
     return render(request, 'historial_prestamos.html', {'historial': historial})
-
+@login_required
 def historial_prestamos_jefe(request):
     historial = HistorialPrestamo.objects.all().order_by('-fecha')  # Ordenar por fecha descendente
     return render(request, 'historial_prestamos_jefe.html', {'historial': historial})
@@ -813,3 +970,6 @@ def profile_users_view(request):
     response['Pragma'] = 'no-cache'
     response['Expires'] = '0'
     return response
+
+
+

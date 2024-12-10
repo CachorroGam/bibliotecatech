@@ -2477,3 +2477,220 @@ section {
 
 
 
+/* Estilos generales de la página */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f5f5f5;
+  margin: 0;
+  padding: 0;
+}
+
+/* Encabezado */
+.header-transparent {
+  background-color: transparent;
+  padding: 10px 0;
+}
+
+/* Logotipo */
+.main-logo img {
+  width: 100%;
+  max-width: 150px;
+}
+
+/* Menú de navegación */
+.navbar {
+  background-color: #333;
+}
+
+.navbar-nav .nav-link {
+  color: #fff;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-item.active .nav-link {
+  background-color: #555;
+}
+
+/* Ajustes para menú desplegable */
+.dropdown-menu {
+  background-color: #555;
+}
+
+.dropdown-menu .dropdown-item {
+  color: #fff;
+}
+
+.dropdown-menu .dropdown-item:hover {
+  background-color: #777;
+}
+
+/* Iconos */
+.icon {
+  font-size: 1.5rem;
+  color: #fff;
+}
+
+.icon:hover {
+  color: #ddd;
+}
+
+/* Ajustes en dispositivos móviles */
+/* Estilos generales de la página */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f5f5f5;
+  margin: 0;
+  padding: 0;
+}
+
+/* Encabezado */
+.header-transparent {
+  background-color: transparent;
+  padding: 10px 0;
+}
+
+/* Logotipo */
+.main-logo img {
+  width: 100%;
+  max-width: 150px;
+}
+
+/* Menú de navegación */
+.navbar {
+  background-color: #333;
+  padding: 10px 0;
+}
+
+.navbar-nav .nav-link {
+  color: #fff;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-item.active .nav-link {
+  background-color: #555;
+}
+
+/* Ajustes para menú desplegable */
+.dropdown-menu {
+  background-color: #555;
+  border-radius: 0;
+}
+
+.dropdown-menu .dropdown-item {
+  color: #fff;
+}
+
+.dropdown-menu .dropdown-item:hover {
+  background-color: #777;
+}
+
+/* Iconos */
+.icon {
+  font-size: 1.5rem;
+  color: #fff;
+}
+
+.icon:hover {
+  color: #ddd;
+}
+
+/* Ajustes en dispositivos móviles */
+@media (max-width: 768px) {
+  .navbar-nav {
+      flex-direction: column;
+      align-items: flex-start;
+  }
+
+  .navbar-nav .nav-item {
+      width: 100%;
+      text-align: left;
+  }
+
+  .navbar-nav .dropdown-menu {
+      width: 100%;
+      padding: 0;
+  }
+
+  .main-logo img {
+      max-width: 100px;
+      margin: 0 auto;
+      display: block;
+  }
+
+  .navbar-toggler {
+      display: block;
+      background-color: transparent;
+      border: none;
+  }
+
+  .navbar-toggler span {
+      display: block;
+      width: 25px;
+      height: 3px;
+      background-color: #fff;
+      margin: 3px 0;
+  }
+}
+
+
+
+
+
+/* Ajustes para dispositivos móviles */
+@media (max-width: 768px) {
+	/* Cambia la visibilidad y el estilo de la navegación */
+	.navbar-collapse {
+		display: block;
+	}
+	.stellarnav .menu-list {
+		display: flex;
+		flex-direction: column;
+	}
+	.stellarnav .menu-item {
+		width: 100%;
+		border-top: 1px solid #ddd;
+	}
+	.stellarnav .menu-item a {
+		display: block;
+		padding: 10px 15px;
+	}
+	.stellarnav .dropdown-menu {
+		position: relative;
+	}
+	.stellarnav .dropdown-menu .dropdown-item {
+		padding: 10px 20px;
+	}
+}
+
+/* Estilo para el botón de alternar de la barra de navegación */
+.navbar-toggler {
+	display: none;
+}
+
+/* Para pantallas pequeñas, el botón de alternar se muestra y se cambia el estilo del menú */
+@media (max-width: 768px) {
+	.navbar-toggler {
+		display: block;
+	}
+	.navbar-collapse {
+		display: none;
+	}
+	.navbar-collapse.show {
+		display: block;
+	}
+	.menu-list {
+		flex-direction: column;
+	}
+	.menu-item {
+		width: 100%;
+		border-top: 1px solid #ddd;
+	}
+	.menu-item a {
+		display: block;
+		padding: 10px 15px;
+	}
+}

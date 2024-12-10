@@ -11,6 +11,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('register', views.register, name='register'),
     path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
     path('dash_usuario', views.dash_usuario, name='dash_usuario'),
     path('dash_empleado', views.dash_empleado, name='dash_empleado'),
     path('dash_jefe', views.dash_jefe, name='dash_jefe'),
@@ -52,14 +53,25 @@ urlpatterns = [
     path('detalles_libro_pre/<int:id>/', views.detalles_libro_pre, name='detalles_libro_pre'),
     path('reservar_libro/<int:libro_id>/', views.reservar_libro, name='reservar_libro'),
     path('cancelar_reserva/<int:libro_id>/', views.cancelar_reserva, name='cancelar_reserva'),
-    path('reservas/', views.reservas_view, name='reservas'),  
+    path('reservas/', views.reservas_view, name='reservas'),
+    path('reservas_empleado/', views.reservas_empleado_view, name='reservas_empleado'),
     path('reservas_jefe/', views.reservas_view_jefe, name='reservas_jefe'),  
     path('reservas/eliminar/<int:id>/', views.eliminar_reserva, name='eliminar_reserva'),
+    path('reservas/eliminar_empleado/<int:id>/', views.eliminar_reserva_empleado, name='eliminar_reserva_empleado'),
+    path('reservas/eliminar_jefe/<int:id>/', views.eliminar_reserva_jefe, name='eliminar_reserva_jefe'),
     path('libro/<int:libro_id>/realizar_prestamo/', views.realizar_prestamo, name='realizar_prestamo'),
+    path('libro/<int:libro_id>/realizar_prestamo_empleado/', views.realizar_prestamo_empleado, name='realizar_prestamo_empleado'),
     path('libro/<int:libro_id>/realizar_prestamo_jefe/', views.realizar_prestamo_jefe, name='realizar_prestamo_jefe'),
     path('devolver_libro/<int:libro_id>/', views.devolver_libro, name='devolver_libro'),
+    path('devolver_libro_empleado/<int:libro_id>/', views.devolver_libro_empleado, name='devolver_libro_empleado'),
+    path('devolver_libro_jefe/<int:libro_id>/', views.devolver_libro_jefe, name='devolver_libro_jefe'),
 
-    
+
+    path('politica_priv/', views.politica_priv, name='politica_priv'),
+    path('politica_priv_empleado/', views.politica_priv_empleado, name='politica_priv_empleado'),
+    path('termns/', views.termns, name='termns'),
+    path('termns_empleado/', views.termns_empleado, name='terms_and_conditions_empleados'),
+
 
     path('historial/', views.historial_prestamos, name='historial_prestamos'),
     path('historial_jefe/', views.historial_prestamos_jefe, name='historial_prestamos_jefe'),

@@ -1,0 +1,75 @@
+{% extends "base_empleado.html" %}
+{% load static %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Términos y Condiciones - Empleados de la Biblioteca</title>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Términos y Condiciones para Empleados</h1>
+        <p>Estos términos y condiciones regulan el uso de las herramientas, recursos y sistemas proporcionados por la biblioteca para los empleados. Al acceder o utilizar dichos recursos, los empleados aceptan estos términos y condiciones. Si no está de acuerdo con ellos, por favor no utilice los recursos de la biblioteca.</p>
+
+        <h2>Uso de las Herramientas y Recursos de la Biblioteca</h2>
+        <ul>
+            <li>Usted se compromete a utilizar los recursos de la biblioteca de acuerdo con las leyes y políticas internas aplicables.</li>
+            <li>No debe utilizar las herramientas de la biblioteca de manera que cause daño, interrupción o mal funcionamiento del mismo.</li>
+            <li>Está prohibido el uso de software malicioso, piratería o cualquier otro acceso no autorizado a los recursos de la biblioteca.</li>
+        </ul>
+
+        <h2>Propiedad Intelectual</h2>
+        <ul>
+            <li>Todos los derechos de propiedad intelectual sobre los recursos de la biblioteca pertenecen a nosotros o a nuestros licenciantes.</li>
+            <li>Usted no puede copiar, modificar, distribuir o utilizar los recursos de la biblioteca sin nuestra autorización previa.</li>
+        </ul>
+
+        <h2>Exclusión de Responsabilidad</h2>
+        <p>No garantizamos la exactitud ni la disponibilidad continua de los recursos de la biblioteca. No somos responsables de ningún daño o pérdida que pueda surgir del uso de los recursos de la biblioteca.</p>
+
+        <h2>Modificaciones a los Términos y Condiciones</h2>
+        <p>Nos reservamos el derecho de modificar estos términos y condiciones en cualquier momento. Cualquier cambio será publicado en esta página y le notificaremos a través de un aviso en nuestro sitio web de la biblioteca.</p>
+
+        <h2>Contáctenos</h2>
+        <p>Si tiene alguna pregunta sobre estos términos y condiciones, puede contactarnos a través de la sección de contacto de nuestro sitio web de la biblioteca.</p>
+    </div>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .title {
+            text-align: center;
+            color: #333;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+    </style>
+</body>
+</html>
+{% endblock %}

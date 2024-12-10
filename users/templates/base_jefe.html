@@ -14,7 +14,7 @@
     </head>
     <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-            <a class="navbar-brand ps-3" href="/dash_jefe">Start Bootstrap</a>
+            <a class="navbar-brand ps-3" href="/dash_jefe">Bienvenido Jefe</a>
             <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
             <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
                 <div class="input-group">
@@ -28,7 +28,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="/settings_jefe">Configuración</a></li>
+                        <li><a class="dropdown-item" href="{% url 'settings_jefe'%}">Configuración</a></li>
                         <li><a class="dropdown-item" href="{% url 'historial_prestamos_jefe' %}">Registro de Actividad</a></li>
                         <li><hr class="dropdown-divider" /></li>
                         <p class="lead">
@@ -52,7 +52,7 @@
                     <div class="sb-sidenav-menu">
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading">Principal</div>
-                            <a class="nav-link" href="/profile_jefe">
+                            <a class="nav-link" href="{% url 'profile_jefe'%}">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 Perfil
                             </a>
@@ -64,7 +64,7 @@
                             </a>
                             <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="/libros_jefe">Libros</a>
+                                    <a class="nav-link" href="{% url 'libros_jefe'%}">Libros</a>
                                 </nav>
                             </div>
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
@@ -74,7 +74,7 @@
                             </a>
                             <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="/users_jefe">Usuarios</a>
+                                    <a class="nav-link" href="{% url 'users_jefe'%}">Usuarios</a>
                                 </nav>
                             </div>
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
@@ -84,7 +84,7 @@
                             </a>
                             <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="/reservas_jefe">Prestamos</a>
+                                    <a class="nav-link" href="{% url 'reservas_jefe'%}">Prestamos</a>
                                     <a class="nav-link" href="{% url 'historial_prestamos_jefe' %}">Historial de Prestamos</a>
 
                                 </nav>
@@ -92,7 +92,7 @@
                             
                             
                             <div class="sb-sidenav-menu-heading">Complementos</div>
-                            <a class="nav-link" href="/register_libro_new_jefe">
+                            <a class="nav-link" href="{% url 'register_libro_new_jefe'%}">
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                 Registrar Libro Nuevo
                             </a>
@@ -100,7 +100,7 @@
                     </div>
                     <div class="sb-sidenav-footer">
                         <div class="small">Conectado como:</div>
-                        Start Bootstrap
+                        Jefe
                     </div>
                 </nav>
             </div>
@@ -113,12 +113,7 @@
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid px-4">
                         <div class="d-flex align-items-center justify-content-between small">
-                            <div class="text-muted">Derechos de autor &copy; Tu sitio web 2023</div>
-                            <div>
-                                <a href="#">Política de privacidad</a>
-                                &middot;
-                                <a href="#">Términos y condiciones</a>
-                            </div>
+                            <div class="text-muted">&copy; 2024 BiblioTec. Todos los derechos reservados.</div>
                         </div>
                     </div>
                 </footer>

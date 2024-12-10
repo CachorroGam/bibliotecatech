@@ -19,10 +19,10 @@
             <tr>
                 <td>{{ forloop.counter }}</td>
                 <td>{{ prestamo.libro.titulo }}</td>
-                <td>{{ prestamo.fecha_prestamo|date:"d-m-Y H:i" }}</td>
+                <td>{{ prestamo.fecha_prestamo|date:"d-m-Y" }}</td>
                 <td>
                     {% if prestamo.fecha_devolucion %}
-                        {{ prestamo.fecha_devolucion|date:"d-m-Y H:i" }}
+                        {{ prestamo.fecha_devolucion|date:"d-m-Y" }}
                     {% else %}
                         No devuelto
                     {% endif %}

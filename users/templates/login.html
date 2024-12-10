@@ -72,6 +72,14 @@
 <body>
     <div class="login-container">
         <h2>Iniciar sesión</h2>
+        {% if error %}
+            <div class="error-message" style="color: red; background-color: #ffe6e6; border: 1px solid #ff0000; padding: 10px; border-radius: 5px; text-align: center;">
+                {{ error }}
+            </div>
+        {% endif %}
+        <br>
+    
+
         <form method="post">
             {% csrf_token %}
             <div class="input-group">
