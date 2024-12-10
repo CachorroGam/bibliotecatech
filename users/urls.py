@@ -73,7 +73,7 @@ urlpatterns = [
     path('termns_empleado/', views.termns_empleado, name='terms_and_conditions_empleados'),
 
 
-    path('historial/', views.historial_prestamos, name='historial_prestamos'),
+    path('historial_prestamos/', views.historial_prestamos, name='historial_prestamos'),
     path('historial_jefe/', views.historial_prestamos_jefe, name='historial_prestamos_jefe'),
 
     path('mis_prestamos/', views.mis_prestamos, name='mis_prestamos'),

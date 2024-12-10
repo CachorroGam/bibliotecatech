@@ -52,7 +52,7 @@
                     <div class="sb-sidenav-menu">
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading">Principal</div>
-                            <a class="nav-link" href="/profile">
+                            <a class="nav-link" href="{% url 'profile' %}">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 Perfil
                             </a>
@@ -85,7 +85,7 @@
                             <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
                                     <a class="nav-link" href="{% url 'reservas' %}">Prestamos</a>
-                                    <a class="nav-link" href="{% url 'historial' %}">Historial de Prestamos</a>
+                                    <a class="nav-link" href="{% url 'historial_prestamos' %}">Historial de Prestamos</a>
 
                                 </nav>
                             </div>
