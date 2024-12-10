@@ -1,4 +1,4 @@
-{% extends "base_Admin.html" %}
+{% extends "base_admin.html" %}
 {% load static %}
 
 {% block content %}
@@ -18,7 +18,7 @@
                 <li>Nombre de usuario: {{ request.user.username }}</li>
                 <li>Email: {{ request.user.email }}</li>
             </ul>
-            <a class="btn btn-primary" href="/settings">Modificar Configuración</a>
+            <a class="btn btn-primary" href="{% url 'settings'%}">Modificar Configuración</a>
         </div>
     </section>
 
