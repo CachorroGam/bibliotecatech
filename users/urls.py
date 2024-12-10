@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import profile_view, settings_view, delete_account, logout_view, settings_usuario_view, contacto_users, devolver_libro_view, profile_empleado_view, settings_empleado_view
+from .views import profile_view, settings_view, delete_account, logout_view, settings_usuario_view, contacto_users, profile_empleado_view, settings_empleado_view
 from django.conf import settings
 from django.conf.urls.static import static
 from .views import profile_users_view
@@ -46,17 +46,21 @@ urlpatterns = [
     path('cancelar_reserva/<int:libro_id>/', views.cancelar_reserva, name='cancelar_reserva'),
     path('reservas/', views.reservas_view, name='reservas'),  
     path('reservas/eliminar/<int:id>/', views.eliminar_reserva, name='eliminar_reserva'),
-    path('reservas/prestamo/<int:libro_id>/', views.registrar_prestamo, name='registrar_prestamo'),
+    path('libro/<int:libro_id>/realizar_prestamo/', views.realizar_prestamo, name='realizar_prestamo'),
+    path('devolver_libro/<int:libro_id>/', views.devolver_libro, name='devolver_libro'),
 
-    path('editar_prestamo/<int:id>/', views.editar_prestamo, name='editar_prestamo'),
-    path('devolucion/<int:reserva_id>/', devolver_libro_view, name='devolver_libro'),
-    path('prestamos/', views.prestamos_activos_view, name='prestamos_activos'),
- 
-    path('devolucion/<int:prestamo_id>/', views.devolucion_prestamo_view, name='devolucion_prestamo'),
-    path('historial_prestamos/', views.historial_prestamos, name='historial_prestamos'),
-    path('historial_prestamos_empleado/', views.historial_prestamos_empleado, name='historial_prestamos_empleado'),
+    
+
+
+
     path('mis_prestamos/', views.mis_prestamos, name='mis_prestamos'),
     path('profile_users/', profile_users_view, name='profile_users'),
+
+
+
+
+
+
 
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

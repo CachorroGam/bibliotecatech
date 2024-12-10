@@ -520,11 +520,10 @@ def editar_usuario_empleado(request, id):
 
 
 
-
-
+@login_required
 def reservar_libro(request, libro_id):
-    libro = Libro.objects.get(id=libro_id)
-    
+    libro = get_object_or_404(Libro, id=libro_id)
+
     if libro.reservado:
         if libro.reservado_por == request.user:
             libro.reservado = False
@@ -535,11 +534,13 @@ def reservar_libro(request, libro_id):
             messages.error(request, f'Este libro ya está reservado por otro usuario.')
     else:
         libro.reservado = True
-        libro.reservado_por = request.user
+        libro.reservado_por = request.user  # Aquí asignamos el usuario autenticado
         libro.save()
         messages.success(request, f'Has reservado el libro: {libro.titulo}')
 
     return redirect('detalles_libro', id=libro.id)
+
+
 
 
 
@@ -583,117 +584,61 @@ def eliminar_reserva(request, id):
 
 
 
-def registrar_prestamo(request, libro_id):
+
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Prestamo, Libro
+from .forms import PrestamoForm
+from django.utils import timezone
+
+def realizar_prestamo(request, libro_id):
     libro = get_object_or_404(Libro, id=libro_id)
     
-    if libro.disponible:
-        prestamo = Prestamo.objects.create(
-            libro=libro,
-            usuario=request.user,
-            fecha_prestamo=timezone.now()
-        )
-
-        libro.disponible = False
-        libro.save()
-
-        messages.success(request, f'El libro "{libro.titulo}" ha sido prestado exitosamente.')
-    else:
-        messages.error(request, f'El libro "{libro.titulo}" no está disponible para préstamo.')
-
-    return redirect('reservas')
-
-
-
-
-def editar_prestamo(request, id):
-    prestamo = get_object_or_404(Prestamo, id=id)
+    if not libro.disponible:
+        # Si el libro ya no está disponible, redirigir a la página de reservas o alguna otra acción
+        return redirect('reservas')
     
     if request.method == 'POST':
-        form = EditarPrestamoForm(request.POST, instance=prestamo)
+        form = PrestamoForm(request.POST, user=request.user)
         if form.is_valid():
-            fecha_prestamo = form.cleaned_data['fecha_prestamo']
-            fecha_devolucion = form.cleaned_data['fecha_devolucion']
-
-            if fecha_devolucion and fecha_prestamo:
-                dias_prestamo = (fecha_devolucion - fecha_prestamo).days
-                prestamo.dias_prestamo = dias_prestamo
-                prestamo.save()
-
-            form.save()
-            messages.success(request, 'El préstamo se ha actualizado correctamente.')
-            return redirect('reservas') 
+            prestamo = form.save()
+            libro.disponible = False  # Marcar el libro como no disponible
+            libro.save()
+            return redirect('reservas')
     else:
-        form = EditarPrestamoForm(instance=prestamo)
+        form = PrestamoForm(user=request.user)
+
+    return render(request, 'realizar_prestamo.html', {'form': form})
+
+
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
+from django.utils import timezone  # Asegúrate de importar esto
+from .models import Prestamo
+
+def devolver_libro(request, libro_id):
+    # Busca el préstamo relacionado con el libro
+    prestamo = get_object_or_404(Prestamo, libro_id=libro_id, estado='prestado')  # Verifica que 'estado' sea el campo correcto en tu modelo
+
+    # Verifica si el libro no ha sido devuelto ya
+    if prestamo.estado != 'devuelto':
+        prestamo.estado = 'devuelto'  # Cambia el estado a 'devuelto'
+        prestamo.fecha_devolucion = timezone.now()  # Registra la fecha de devolución
+        prestamo.libro.disponible = True  # Marca el libro como disponible
+        prestamo.libro.save()  # Guarda los cambios en el libro
+        prestamo.save()  # Guarda los cambios en el préstamo
+
+        messages.success(request, "El libro ha sido devuelto exitosamente.")
+    else:
+        messages.warning(request, "El libro ya había sido devuelto anteriormente.")
     
-    return render(request, 'editar_prestamo.html', {'form': form, 'prestamo': prestamo})
-
-
-
-
-
-def devolver_libro_view(request, reserva_id):
-    reserva = get_object_or_404(Prestamo, id=reserva_id)
-
-    if reserva.usuario != request.user:
-        messages.error(request, 'Esta reserva no pertenece a su cuenta.')
-        return redirect('reservas_lista') 
-
-    if request.method == 'POST':
-        confirmacion = request.POST.get('confirmar_devolucion')
-        
-        if confirmacion == 'si':
-            if reserva.estado != 'devuelto': 
-                reserva.estado = 'devuelto'
-                reserva.fecha_devolucion = timezone.now()  
-                reserva.libro.disponible = True 
-                reserva.libro.save()  
-                reserva.save()  
-
-                messages.success(request, '¡Libro devuelto con éxito!')
-            else:
-                messages.warning(request, 'Este libro ya ha sido devuelto anteriormente.')
-
-            return redirect('reservas')  
-        else:
-            messages.info(request, 'La devolución ha sido cancelada.')
-
-    return render(request, 'devolucion_prestamo.html', {'reserva': reserva})
+    # Redirige al usuario a su página de préstamos
+    return redirect('reservas')  # Cambia esta ruta según tu aplicación
 
 
 
 
 
 
-def devolucion_prestamo_view(request, prestamo_id):
-    prestamo = get_object_or_404(Prestamo, id=prestamo_id)
-
-    if request.method == 'POST':
-        prestamo.estado = 'Devuelto'
-        prestamo.save()
-        return redirect('prestamos_activos')  
-
-    return render(request, 'devolucion_prestamo.html', {'prestamo': prestamo})
-
-
-
-
-
-def prestamos_activos_view(request):
-    prestamos = Prestamo.objects.all()  
-    return render(request, 'prestamos_activos.html', {'prestamos': prestamos})
-
-
-
-
-def historial_prestamos(request):
-    prestamos = Prestamo.objects.all().order_by('-fecha_prestamo') 
-    return render(request, 'historial_prestamos.html', {'prestamos': prestamos})
-
-
-def historial_prestamos_empleado(request):
-
-    prestamos = Prestamo.objects.all().order_by('-fecha_prestamo') 
-    return render(request, 'historial_prestamos_empleado.html', {'prestamos': prestamos})
 
 
 

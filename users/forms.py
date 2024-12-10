@@ -45,12 +45,23 @@ class ContactForm(forms.Form):
 
 
 
+# forms.py
+
+from django import forms
+from .models import Prestamo
+
 class PrestamoForm(forms.ModelForm):
     class Meta:
         model = Prestamo
-        fields = ['usuario', 'libro', 'fecha_devolucion', 'estado', 'dias_prestamo']
-        
-    libro = forms.ModelChoiceField(queryset=Libro.objects.all(), empty_label="Selecciona un libro")
+        fields = ['libro', 'usuario', 'fecha_devolucion', 'estado', 'dias_prestamo', 'fecha_prestamo']
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)  # Obtener el usuario desde kwargs si está presente
+        super().__init__(*args, **kwargs)
+
+        if user:  # Si el usuario está presente
+            self.fields['usuario'].initial = user  # Establece el usuario como valor inicial
+
 
 
 
