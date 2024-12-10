@@ -7,14 +7,14 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Panel de Control - SB Admin</title>
+        <title>Panel de Control - SB Jefe</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
         <link rel="stylesheet" type="text/css" href="{% static 'css/styles_admin.css' %}">
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     </head>
     <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-            <a class="navbar-brand ps-3" href="/dash_admin">Start Bootstrap</a>
+            <a class="navbar-brand ps-3" href="/dash_jefe">Start Bootstrap</a>
             <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
             <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
                 <div class="input-group">
@@ -28,8 +28,8 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="/settings">Configuración</a></li>
-                        <li><a class="dropdown-item" href="{% url 'historial_prestamos' %}">Registro de Actividad</a></li>
+                        <li><a class="dropdown-item" href="/settings_jefe">Configuración</a></li>
+                        <li><a class="dropdown-item" href="{% url 'historial_prestamos_jefe' %}">Registro de Actividad</a></li>
                         <li><hr class="dropdown-divider" /></li>
                         <p class="lead">
                             {% if user.is_authenticated %}
@@ -52,7 +52,7 @@
                     <div class="sb-sidenav-menu">
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading">Principal</div>
-                            <a class="nav-link" href="/profile">
+                            <a class="nav-link" href="/profile_jefe">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 Perfil
                             </a>
@@ -64,7 +64,7 @@
                             </a>
                             <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="/libros">Libros</a>
+                                    <a class="nav-link" href="/libros_jefe">Libros</a>
                                 </nav>
                             </div>
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
@@ -74,7 +74,7 @@
                             </a>
                             <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="/users">Usuarios</a>
+                                    <a class="nav-link" href="/users_jefe">Usuarios</a>
                                 </nav>
                             </div>
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
@@ -84,15 +84,15 @@
                             </a>
                             <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="/reservas">Prestamos</a>
-                                    <a class="nav-link" href="{% url 'historial_prestamos' %}">Historial de Prestamos</a>
+                                    <a class="nav-link" href="/reservas_jefe">Prestamos</a>
+                                    <a class="nav-link" href="{% url 'historial_prestamos_jefe' %}">Historial de Prestamos</a>
 
                                 </nav>
                             </div>
                             
                             
                             <div class="sb-sidenav-menu-heading">Complementos</div>
-                            <a class="nav-link" href="/register_libro_new">
+                            <a class="nav-link" href="/register_libro_new_jefe">
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                 Registrar Libro Nuevo
                             </a>

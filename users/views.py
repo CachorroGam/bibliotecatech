@@ -66,6 +66,7 @@ def dash_empleado(request):
 
 def dash_jefe(request):
     return render(request, 'dash_jefe.html')
+
 def dash_admin(request):
     return render(request, 'dash_admin.html')
 
@@ -144,9 +145,6 @@ def logout_view(request):
     return redirect('login') 
 
 
-
-
-
 def settings_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -179,6 +177,41 @@ def settings_view(request):
         return redirect('settings')
 
     return render(request, 'settings.html')
+
+
+
+def settings_view_jefe(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        new_password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
+        notifications = request.POST.get('notifications') == 'on'
+        profile_picture = request.FILES.get('profile_pictures') 
+
+        request.user.username = username
+        request.user.email = email
+        request.user.notifications = notifications 
+        request.user.save()
+
+        if new_password and new_password == confirm_password:
+            request.user.set_password(new_password)
+            request.user.save()
+            messages.success(request, '¡La contraseña se ha actualizado correctamente!')
+        elif new_password:
+            messages.error(request, 'Las contraseñas no coinciden.')
+
+        # Manejo de la foto de perfil
+        if profile_picture:
+            user_profile, created = UserProfile.objects.get_or_create(user=request.user)
+            user_profile.profile_picture = profile_picture 
+            user_profile.save()
+            messages.success(request, '¡La foto de perfil se ha actualizado correctamente!')
+
+        messages.success(request, '¡La configuración se ha actualizado correctamente!')
+        return redirect('settings_jefe')
+
+    return render(request, 'settings_jefe.html')
 
 
 def settings_empleado_view(request):
@@ -224,6 +257,17 @@ def profile_view(request):
     response['Pragma'] = 'no-cache'
     response['Expires'] = '0'
     return response
+
+
+def profile_view_jefe(request):
+    user_profile, created = UserProfile.objects.get_or_create(user=request.user)
+    
+    response = render(request, 'profile_jefe.html', {'user_profile': user_profile})
+    response['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response['Pragma'] = 'no-cache'
+    response['Expires'] = '0'
+    return response
+
 
 def profile_empleado_view(request):
     user_profile, created = UserProfile.objects.get_or_create(user=request.user)
@@ -297,6 +341,21 @@ def listar_libros(request):
 
     return response
 
+
+
+
+def listar_libros_jefe(request):
+    libros = Libro.objects.all() 
+
+    response = render(request, 'libros_list_jefe.html', {'libros': libros})
+
+    response['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response['Pragma'] = 'no-cache'
+    response['Expires'] = '0'
+
+    return response
+
+
 @login_required
 def listar_libros_empleado(request):
     libros = Libro.objects.all() 
@@ -367,6 +426,18 @@ def registrar_libro(request):
     return render(request, 'register_libro.html', {'form': form})
 
 
+
+def registrar_libro_jefe(request):
+    if request.method == 'POST':
+        form = LibroForm(request.POST, request.FILES) 
+        if form.is_valid():
+            form.save()
+            return redirect('libros_jefe')
+    else:
+        form = LibroForm()
+    
+    return render(request, 'register_libro_jefe.html', {'form': form})
+
 def registrar_libro_empleado(request):
     if request.method == 'POST':
         form = LibroForm(request.POST, request.FILES)
@@ -394,6 +465,18 @@ def editar_libro(request, id):
 
     return render(request, 'editar_libro.html', {'form': form, 'libro': libro})
 
+def editar_libro_jefe(request, id):
+    libro = get_object_or_404(Libro, id=id)
+
+    if request.method == 'POST':
+        form = LibroForm(request.POST, request.FILES, instance=libro)
+        if form.is_valid():
+            form.save()
+            return redirect('dash_jefe') 
+    else:
+        form = LibroForm(instance=libro)
+
+    return render(request, 'editar_libro_jefe.html', {'form': form, 'libro': libro})
 
 
 def eliminar_libro(request, id):
@@ -415,15 +498,18 @@ def users(request):
     return render(request, 'users.html', {'grouped_usuarios': grouped_usuarios})
 
 
+def users_jefe(request):
+    usuarios = User.objects.all().select_related('profile').exclude(groups__name='admin')  # Excluir administradores y cargar perfiles relacionados
+    grupos = Group.objects.all()  # Obtener todos los grupos
+    grouped_usuarios = {grupo.name: usuarios.filter(groups__name=grupo.name) for grupo in grupos}
+    return render(request, 'users_jefe.html', {'grouped_usuarios': grouped_usuarios})
+
 
 # def users(request):
 #     all_users = User.objects.all()  
 #     return render(request, 'users.html', {'all_users': all_users})
 
 
-def users_empleado(request):
-    all_users = User.objects.all() 
-    return render(request, 'users_empleado.html', {'all_users': all_users})
 
 
 
@@ -482,6 +568,46 @@ def editar_usuario(request, id):
     })
 
 
+def editar_usuario_jefe(request, id):
+    user = get_object_or_404(User, id=id)
+
+    tiene_admin = user.groups.filter(name="admin").exists()
+    tiene_empleado = user.groups.filter(name="empleado").exists()
+    tiene_jefe = user.groups.filter(name="jefe").exists()
+    tiene_usuario = user.groups.filter(name="usuario").exists()
+    
+    if request.method == 'POST':
+        form = UserForm(request.POST, instance=user)
+        role = request.POST.get('role')  # Obtener el valor del rol del formulario
+        password_form = PasswordChangeForm(user, request.POST)
+
+        new_role = request.POST.get('role')  
+        
+        if password_form.is_valid():
+            user.set_password(password_form.cleaned_data['new_password1'])
+            user.save()
+            messages.success(request, "Contraseña cambiada con éxito")
+        
+        if new_role:
+            group = Group.objects.get(name=new_role)
+            user.groups.clear() 
+            user.groups.add(group)  
+            
+            messages.success(request, f"Rol cambiado a {new_role}")
+        
+    else:
+        form = UserForm(instance=user)
+        password_form = PasswordChangeForm(user)
+    
+    return render(request, 'editar_usuario_jefe.html', {
+        'form': form,
+        'password_form': password_form,
+        'user': user,
+        'tiene_admin': tiene_admin,
+        'tiene_empleado': tiene_empleado,
+        'tiene_jefe': tiene_jefe,
+        'tiene_usuario': tiene_usuario,
+    })
 
 
 from django.contrib import messages
@@ -566,6 +692,14 @@ def reservas_view(request):
     return render(request, 'reservas.html', context)
 
 
+def reservas_view_jefe(request):
+    reservas = Libro.objects.filter(reservado=True) 
+    context = {
+        'reservas_jefe': reservas
+    }
+    return render(request, 'reservas_jefe.html', context)
+
+
 
 
 def eliminar_reserva(request, id):
@@ -609,6 +743,25 @@ def realizar_prestamo(request, libro_id):
 
     return render(request, 'realizar_prestamo.html', {'form': form})
 
+def realizar_prestamo_jefe(request, libro_id):
+    libro = get_object_or_404(Libro, id=libro_id)
+    
+    if not libro.disponible:
+        # Si el libro ya no está disponible, redirigir a la página de reservas o alguna otra acción
+        return redirect('reservas_jefe')
+    
+    if request.method == 'POST':
+        form = PrestamoForm(request.POST, user=request.user)
+        if form.is_valid():
+            prestamo = form.save()
+            libro.disponible = False  # Marcar el libro como no disponible
+            libro.save()
+            return redirect('reservas_jefe')
+    else:
+        form = PrestamoForm(user=request.user)
+
+    return render(request, 'realizar_prestamo_jefe.html', {'form': form})
+
 
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
@@ -638,7 +791,16 @@ def devolver_libro(request, libro_id):
 
 
 
+from django.shortcuts import render
+from .models import HistorialPrestamo
 
+def historial_prestamos(request):
+    historial = HistorialPrestamo.objects.all().order_by('-fecha')  # Ordenar por fecha descendente
+    return render(request, 'historial_prestamos.html', {'historial': historial})
+
+def historial_prestamos_jefe(request):
+    historial = HistorialPrestamo.objects.all().order_by('-fecha')  # Ordenar por fecha descendente
+    return render(request, 'historial_prestamos_jefe.html', {'historial': historial})
 
 
 

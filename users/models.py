@@ -99,17 +99,35 @@ class Libro(models.Model):
 class Prestamo(models.Model):
     libro = models.ForeignKey(Libro, on_delete=models.CASCADE)
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
-    fecha_prestamo = models.DateField()  # Usamos DateTimeField para la fecha y hora exacta
+    fecha_prestamo = models.DateField()
     fecha_devolucion = models.DateTimeField(null=True, blank=True)
     estado = models.CharField(
         max_length=10, choices=[('prestado', 'Prestado'), ('devuelto', 'Devuelto')], default='prestado'
-    )  
+    )
     dias_prestamo = models.IntegerField(null=True, blank=True)
 
     def marcar_devuelto(self):
         self.estado = 'devuelto'
         self.fecha_devolucion = timezone.now()
         self.save()
+        # Crear un registro en el historial
+        HistorialPrestamo.objects.create(
+            usuario=self.usuario,
+            numero_membresia=self.usuario.profile.numero_membresia,
+            libro=self.libro,
+            accion='devolucion'
+        )
+
+    def save(self, *args, **kwargs):
+        if not self.pk and self.estado == 'prestado':
+            # Crear un registro en el historial al crear el préstamo
+            HistorialPrestamo.objects.create(
+                usuario=self.usuario,
+                numero_membresia=self.usuario.profile.numero_membresia,
+                libro=self.libro,
+                accion='prestamo'
+            )
+        super().save(*args, **kwargs)
 
     def esta_vencido(self):
         if self.estado == 'prestado' and self.fecha_devolucion is None:
@@ -152,7 +170,24 @@ class Genero(models.Model):
         return self.nombre
     
 
+class HistorialPrestamo(models.Model):
+    ACCION_CHOICES = [
+        ('prestamo', 'Préstamo'),
+        ('devolucion', 'Devolución'),
+    ]
 
-    
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    numero_membresia = models.CharField(max_length=20, blank=True, null=True)  # Almacenará el número de membresía del usuario
+    libro = models.ForeignKey(Libro, on_delete=models.CASCADE)
+    accion = models.CharField(max_length=10, choices=ACCION_CHOICES)
+    fecha = models.DateTimeField(auto_now_add=True)  # Fecha en que se realiza la acción
+
+    def __str__(self):
+        return f"{self.usuario.username} - {self.libro.titulo} ({self.accion}) - {self.fecha}"
+
+    class Meta:
+        verbose_name = "Historial de Préstamo"
+        verbose_name_plural = "Historial de Préstamos"
+
 
 
