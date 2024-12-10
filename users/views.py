@@ -100,7 +100,7 @@ def dash_jefe(request):
     }
     return render(request, 'dash_jefe.html', context)
 
-
+@login_required
 def dash_admin(request):
     total_libros = Libro.objects.count()
     libros_disponibles = Libro.objects.filter(disponible=True).count()
