@@ -527,6 +527,21 @@ def editar_libro(request, id):
     return render(request, 'editar_libro.html', {'form': form, 'libro': libro})
 
 @login_required
+def editar_libro_empleado(request, id):
+    libro = get_object_or_404(Libro, id=id)
+
+    if request.method == 'POST':
+        form = LibroForm(request.POST, request.FILES, instance=libro)
+        if form.is_valid():
+            form.save()
+            return redirect('dash_empleado') 
+    else:
+        form = LibroForm(instance=libro)
+
+    return render(request, 'editar_libro_empleado.html', {'form': form, 'libro': libro})
+
+
+@login_required
 def editar_libro_jefe(request, id):
     libro = get_object_or_404(Libro, id=id)
 
@@ -540,15 +555,43 @@ def editar_libro_jefe(request, id):
 
     return render(request, 'editar_libro_jefe.html', {'form': form, 'libro': libro})
 
+
+
 @login_required
 def eliminar_libro(request, id):
     libro = get_object_or_404(Libro, id=id)
 
     if request.method == 'POST':
         libro.delete()
-        return redirect('dash_admin')
+        messages.success(request, f'El libro "{libro.nombre}" ha sido eliminado con éxito.')
+        return redirect('libros')
 
-    return redirect('dash_admin')  
+    return redirect('libros')  
+
+@login_required
+def eliminar_libro_jefe(request, id):
+    libro = get_object_or_404(Libro, id=id)
+
+    if request.method == 'POST':
+        libro.delete()
+        messages.success(request, f'El libro "{libro.nombre}" ha sido eliminado con éxito.')
+        return redirect('libros_jefe')
+
+    return redirect('libros_jefe')  
+
+@login_required
+def eliminar_libro_empleado(request, id):
+    libro = get_object_or_404(Libro, id=id)
+
+    if request.method == 'POST':
+        libro.delete()
+        messages.success(request, f'El libro "{libro.nombre}" ha sido eliminado con éxito.')
+        return redirect('libros_empleado')
+
+    return redirect('libros_empleado')  
+ 
+
+
 
 from django.shortcuts import render
 from django.contrib.auth.models import User, Group
@@ -580,6 +623,13 @@ def eliminar_usuario(request, user_id):
     user.delete()
     return redirect('users')  
 
+@login_required
+def eliminar_usuario_jefe(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    user.delete()
+    return redirect('users_jefe')  
+
+ 
 
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render

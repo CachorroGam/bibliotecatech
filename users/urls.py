@@ -35,16 +35,24 @@ urlpatterns = [
     path('libros_empleado/', views.listar_libros_empleado, name='libros_empleado'),
     path('editar_libro/<int:id>/', views.editar_libro, name='editar_libro'),
     path('editar_libro_jefe/<int:id>/', views.editar_libro_jefe, name='editar_libro_jefe'),
+    path('editar_libro_empleado/<int:id>/', views.editar_libro_empleado, name='editar_libro_empleado'),
+
     path('register_libro_new/', views.registrar_libro, name='register_libro_new'),
     path('register_libro_new_jefe/', views.registrar_libro_jefe, name='register_libro_new_jefe'),
     path('register_libro_new_empleado/', views.registrar_libro_empleado, name='register_libro_new_empleado'),
     path('eliminar_libro/<int:id>/', views.eliminar_libro, name='eliminar_libro'),
+    path('eliminar_libro_empleado/<int:id>/', views.eliminar_libro_empleado, name='eliminar_libro_empleado'),
+    path('eliminar_libro_jefe/<int:id>/', views.eliminar_libro_jefe, name='eliminar_libro_jefe'),
+
     path('users/', views.users, name='users'),
     path('users_jefe/', views.users_jefe, name='users_jefe'),
+
     path('eliminar_usuario/<int:user_id>/', views.eliminar_usuario, name='eliminar_usuario'),
+    path('eliminar_usuario_jefe/<int:user_id>/', views.eliminar_usuario_jefe, name='eliminar_usuario_jefe'),
     path('editar_usuario/<int:id>/', views.editar_usuario, name='editar_usuario'),
     path('editar_usuario_jefe/<int:id>/', views.editar_usuario_jefe, name='editar_usuario_jefe'),
     path('editar_usuario_empleado/<int:id>/', views.editar_usuario_empleado, name='editar_usuario_empleado'),
+
     path('libros_users/', views.listar_libros_users, name='libros_users'),
     path('libro/', views.listar_libro, name='libro'),
     path('contacto/', views.contacto, name='contacto'),

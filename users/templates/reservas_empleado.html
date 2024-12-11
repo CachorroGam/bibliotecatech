@@ -38,10 +38,10 @@
                         </td>
                         <td>{{ libro.titulo }}</td>
                         <td>
-                            <a href="{% url 'eliminar_reserva' libro.id %}" class="btn-delete" onclick="return confirm('¿Está seguro de eliminar esta reserva?');">Eliminar</a>
+                            <a href="{% url 'eliminar_reserva_empleado' libro.id %}" class="btn-delete" onclick="return confirm('¿Está seguro de eliminar esta reserva?');">Eliminar</a>
                             <a href="{% url 'realizar_prestamo_empleado' libro.id %}" class="btn-prestamo">Realizar Préstamo</a>
                             <!-- templates/realizar_devolucion.html -->
-                            <form action="{% url 'devolver_libro' libro.id %}" method="post" style="display:inline;" onsubmit="return confirm('¿Está seguro de que desea devolver este libro?');">
+                            <form action="{% url 'devolver_libro_empleado' libro.id %}" method="post" style="display:inline;" onsubmit="return confirm('¿Está seguro de que desea devolver este libro?');">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-primary">Devolver libro</button>
                             </form>

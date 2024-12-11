@@ -107,7 +107,7 @@
                 <td>{{ usuario.profile.numero_membresia }}</td>
                 <td class="action-buttons">
                     <a href="{% url 'editar_usuario_jefe' usuario.id %}" class="btn-editar">Editar</a>
-                    <a href="{% url 'eliminar_usuario' usuario.id %}" class="btn-eliminar" onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario?');">Eliminar</a>
+                    <a href="{% url 'eliminar_usuario_jefe' usuario.id %}" class="btn-eliminar" onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario?');">Eliminar</a>
                 </td>
             </tr>
             {% endfor %}

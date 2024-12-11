@@ -40,15 +40,17 @@
                         <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
                             
                             <div class="text-center mb-2">
-                                <a class="btn btn-outline-dark" href="{% url 'editar_libro' libro.id %}">Editar</a>
+                                <a class="btn btn-outline-dark" href="{% url 'editar_libro_empleado' libro.id %}">Editar</a>
                             </div>
                             
                             <div class="text-center">
-                                <form action="{% url 'eliminar_libro' libro.id %}" method="post" style="display:inline;">
+                                <form action="{% url 'eliminar_libro_empleado' libro.id %}" method="post" style="display:inline;"
+                                      onsubmit="return confirm('¿Está seguro de que desea eliminar el libro {{ libro.nombre }}?');">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-outline-danger">Eliminar</button>
                                 </form>
                             </div>
+                            
                         </div>
                         
                     </div>

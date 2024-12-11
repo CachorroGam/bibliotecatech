@@ -59,7 +59,13 @@
             </tbody>
         </table>
     </div>
-
+    <div id="modal-confirm" style="display: none;">
+        <div class="modal-content">
+            <p id="modal-message"></p>
+            <button id="confirm-action" class="btn-confirm">Confirmar</button>
+            <button onclick="closeModal()" class="btn-cancel">Cancelar</button>
+        </div>
+    </div>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -147,6 +153,44 @@
 
         .btn-edit:hover {
             background-color: #f57c00;
+        }
+        #modal-confirm {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-confirm {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px;
+            border-radius: 5px;
+        }
+
+        .btn-cancel {
+            background-color: #f44336;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px;
+            border-radius: 5px;
         }
     </style>
 </body>

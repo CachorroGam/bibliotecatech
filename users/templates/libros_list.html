@@ -45,7 +45,8 @@
                             </div>
                             
                             <div class="text-center">
-                                <form action="{% url 'eliminar_libro' libro.id %}" method="post" style="display:inline;">
+                                <form action="{% url 'eliminar_libro' libro.id %}" method="post" style="display:inline;"
+                                      onsubmit="return confirm('¿Está seguro de que desea eliminar el libro {{ libro.nombre }}?');">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-outline-danger">Eliminar</button>
                                 </form>
