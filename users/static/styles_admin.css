@@ -11298,3 +11298,9 @@ body {
   padding: 20px;
   font-size: 1.1em;
 }
+
+
+
+.sb-nav-toggled #layoutSidenav_nav {
+  display: none;
+}

@@ -12,7 +12,7 @@
 	<meta name="author" content="">
 	<meta name="keywords" content="">
 	<meta name="description" content="">
-
+	<link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
 		integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="{% static 'css/normalize.css' %}">
@@ -20,91 +20,117 @@
 	<link rel="stylesheet" type="text/css" href="{% static 'css/vendor.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
 
-	<title>{% block title %}BilioTec{% endblock %}</title>
+	<title>{% block title %}BilioTec{% endblock %}</title>}
+
+    <style>
+        .btn-custom {
+            background-color: #cfa099; /* Café pastel */
+            color: #000000; /* Texto negro */
+            border: #482f2b; /* Borde invisible */
+            padding: 10px 25px; /* Espaciado interno más amplio */
+            font-size: 1rem; /* Tamaño de fuente */
+            border-radius: 1px; /* Borde redondeado */
+            transition: background-color 0.3s ease; /* Efecto de transición */
+            margin-right: 25px; /* Espaciado entre botones */
+            width: 150px; /* Ancho fijo */
+            text-align: center; /* Alineación de texto al centro */
+            display: block; /* Bloquear el ancho completo */
+        }
+
+        .btn-custom:hover {
+            background-color: #d4a297; /* Café pastel más oscuro en hover */
+        }
+
+        .navbar-brand img {
+            width: 90px; /* Ajuste de tamaño de la imagen */
+        }
+
+        .footer-logo img {
+            width: 80px; /* Ajuste de tamaño de la imagen en el pie de página */
+        }
+
+        .footer-social a {
+            color: #fff; /* Texto blanco */
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .footer-social a:hover {
+            color: #f0b6c3; /* Rosa pastel en hover */
+        }
+
+        .footer-links h5 {
+            color: #f0b6c3; /* Título rosa pastel */
+        }
+
+        .footer-links a {
+            color: #fff; /* Texto blanco */
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .footer-links a:hover {
+            color: #f0b6c3; /* Rosa pastel en hover */
+        }
+    </style>
+
 </head>
-
 <body data-bs-spy="scroll" data-bs-target="#header" tabindex="0">
+    <div id="header-wrap">
+        <header id="header" class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/dash_usuario"><img src="{% static 'images/main-logo.png' %}" alt="logo"></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-	<div id="header-wrap">
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto d-flex align-items-center">
+                        <li class="nav-item">
+                            <a class="nav-link btn-custom" href="/dash_usuario">Inicio</a>
+                        </li>
+						<li class="nav-item">
+							<a class="nav-link btn-custom" href="/profile_users">Perfil</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle btn-custom" href="#" id="navbarDropdown" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">Sobre Nosotros</a>
+								<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+									<li><a class="dropdown-item btn-custom text-dark" href="{% url 'dash_usuario' %}#historia_users">Historia</a></li>
+									<li><a class="dropdown-item btn-custom text-dark" href="{% url 'dash_usuario' %}#mision_users">Misión</a></li>
+									<li><a class="dropdown-item btn-custom text-dark" href="{% url 'dash_usuario' %}#vision_users">Visión</a></li>
+									<li><a class="dropdown-item btn-custom text-dark" href="{% url 'dash_usuario' %}#valores_users">Valores</a></li>
+									<li><a class="dropdown-item btn-custom text-dark" href="{% url 'dash_usuario' %}#objetivos_users">Objetivos</a></li>
+									<li><a class="dropdown-item btn-custom text-dark" href="{% url 'dash_usuario' %}#gracias_users">Gracias</a></li>
+								</ul>								
+                        </li>
+                        <li class="nav-item"><a class="nav-link btn-custom" href="/libros_users">Libros</a></li>
+                        <li class="menu-item"><a class="nav-link btn-custom" href="{% url 'mis_prestamos' %}">Prestamos</a></li>
+						<li class="menu-item"><a class="nav-link btn-custom" href="/contacto_users">Contacto</a></li>
+                        <!-- Botón de inicio de sesión condicional -->
+						{% if user.is_authenticated %}
+						<form action="{% url 'logout' %}" method="post" class="d-inline">
+							{% csrf_token %}
+								<button type="submit" class="btn" style="background-color: #D2B48C; color: #FFF;">Cerrar sesión</button>
+							</form>
+						{% else %}
+							<a href="{% url 'login' %}" class="btn" style="background-color: #D2B48C; color: #FFF;">Iniciar sesión</a>
+						{% endif %}
+					
 
-		<div class="top-content">
-			<div class="container-fluid">
-				<div class="row">
-					<div class="col-md-6">
-						<div class="social-links">
-							<ul class="list-unstyled">
-								<li><a href="https://www.facebook.com"><i class="icon icon-facebook"></i></a></li>
-								<li><a href="https://www.twitter.com"><i class="icon icon-twitter"></i></a></li>
-								<li><a href="https://www.youtube.com"><i class="icon icon-youtube-play"></i></a></li>
-							</ul>
-						</div>
-					</div>
-					<div class="col-md-6 text-end">
-						<div class="auth-links">
-							<p class="lead">
-								{% if user.is_authenticated %}
-									<form action="{% url 'logout' %}" method="post" class="d-inline">
-										{% csrf_token %}
-										<button type="submit" class="btn btn-link">Cerrar sesión</button>
-									</form>
-								{% else %}
-									<a href="{% url 'login' %}" class="btn btn-link">Iniciar sesión</a>
-								{% endif %}
-							</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+                    </ul>
+                </div>
+            </div>
+        </header>
+    </div>
 
-		<header id="header">
-			<div class="container-fluid">
-				<div class="row">
-					<div class="col-md-2">
-						<div class="main-logo">
-							<a href="/dash_usuario"><img src="{% static 'images/main-logo.png' %}" alt="logo" style="width: 90px;"></a>
-						</div>
-					</div>
+    <main class="container mt-5">
+	{% block content %}
 
-					<div class="col-md-10">
-						<nav id="navbar" class="navbar navbar-expand-lg navbar-light bg-light">
-							<div class="stellarnav main-menu">
-								<ul class="menu-list list-unstyled">
-									<li class="menu-item active"><a class="nav-link" href="/dash_usuario">Inicio</a></li>
-									<li class="menu-item"><a class="nav-link" href="/profile_users">Perfil</a></li>
-									<li class="nav-item dropdown">
-										<a class="nav-link dropdown-toggle" id="projectsDropdown" role="button"
-											data-bs-toggle="dropdown" aria-expanded="false">Sobre Nosotros</a>
-										<ul class="dropdown-menu" aria-labelledby="projectsDropdown">
-											<li><a class="dropdown-item" href="{% url 'dash_usuario' %}#historia_users">Historia</a></li>
-											<li><a class="dropdown-item" href="{% url 'dash_usuario' %}#mision_users">Misión</a></li>
-											<li><a class="dropdown-item" href="{% url 'dash_usuario' %}#vision_users">Visión</a></li>
-											<li><a class="dropdown-item" href="{% url 'dash_usuario' %}#valores_users">Valores</a></li>
-											<li><a class="dropdown-item" href="{% url 'dash_usuario' %}#objetivos_users">Objetivos</a></li>
-											<li><a class="dropdown-item" href="{% url 'dash_usuario' %}#gracias_users">Gracias</a></li>
-										</ul>
-									</li>
-									<li class="menu-item"><a class="nav-link" href="/libros_users">Libros</a></li>
-									<li class="menu-item"><a class="nav-link" href="{% url 'mis_prestamos' %}">Prestamos</a></li>
-									<li class="menu-item"><a class="nav-link" href="/contacto_users">Contacto</a></li>
-								</ul>
-
-								<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-									data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
-									aria-label="Toggle navigation">
-									<span class="navbar-toggler-icon"></span>
-								</button>
-							</div>
-						</nav>
-					</div>
-
-				</div>
-			</div>
-		</header>
-
-	</div>
-
-	{% block content %}{% endblock %}
+	
+	{% endblock %}
 
 	<footer style="background-color: #333; color: #fff; padding: 40px 0;">
 		<div style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between;">
@@ -136,22 +162,6 @@
 				</ul>
 			</div>
 	
-			<div style="flex: 1; margin-right: 30px;">
-				<h5 style="color: #f39c12; margin-bottom: 15px;">Mi Cuenta</h5>
-				<ul style="list-style: none; padding: 0;"> 
-					<li><a href="/profile_users" style="color: #fff; text-decoration: none; margin-bottom: 8px; display: block;">Mi Perfil</a></li>
-				</ul>	
-							{% if user.is_authenticated %}
-								<form action="{% url 'logout' %}" method="post" class="d-inline" style="color: #fff; text-decoration: none; margin-bottom: 8px; display: block;">
-									{% csrf_token %}
-									<button type="submit" style="color: #fff; text-decoration: none; margin-bottom: 8px; display: block;">Cerrar sesión</button>
-								</form>
-							{% else %}
-								<a href="{% url 'login' %}" style="color: #fff; text-decoration: none; margin-bottom: 8px; display: block;">Iniciar sesión</a>
-							{% endif %}
-		
-			</div>
-			
 	
 			<div style="flex: 1;">
 				<h5 style="color: #f39c12; margin-bottom: 15px;">Síguenos</h5>

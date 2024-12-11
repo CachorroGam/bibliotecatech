@@ -53,7 +53,11 @@ from .models import Prestamo
 class PrestamoForm(forms.ModelForm):
     class Meta:
         model = Prestamo
-        fields = ['libro', 'usuario', 'fecha_devolucion', 'estado', 'dias_prestamo', 'fecha_prestamo']
+        fields = ['libro', 'usuario', 'fecha_prestamo', 'fecha_devolucion', 'estado']
+        widgets = {
+            'fecha_prestamo': forms.DateInput(attrs={'type': 'date'}),
+            'fecha_devolucion': forms.DateInput(attrs={'type': 'date'}),
+        }
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)  # Obtener el usuario desde kwargs si está presente
@@ -61,7 +65,6 @@ class PrestamoForm(forms.ModelForm):
 
         if user:  # Si el usuario está presente
             self.fields['usuario'].initial = user  # Establece el usuario como valor inicial
-
 
 
 
